@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <title>BiblioTech</title>
+    <link rel="stylesheet" href="src/styles/styles.css" />
+  </head>
+  <body>
+    <div class="loader" id="loader">
+      <div class="loader__inner">
+        <div class="loader__mark"><i data-lucide="library-big"></i></div>
+        <div class="loader__bar"></div>
+        <p>Carregando BiblioTech…</p>
+      </div>
+    </div>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script type="module">
+      import { Auth } from "./src/services/auth.js";
+      if (window.lucide) window.lucide.createIcons();
+      const user = await Auth.getUser();
+      location.replace(user ? "dashboard.html" : "login.html");
+    </script>
+  </body>
+</html>

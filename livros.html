@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <title>BiblioTech — Acervo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles/styles.css" />
+  </head>
+  <body>
+    <div class="loader" id="loader">
+      <div class="loader__inner">
+        <div class="loader__mark"><i data-lucide="library-big"></i></div>
+        <div class="loader__bar"></div>
+        <p>Carregando acervo…</p>
+      </div>
+    </div>
+    <div class="scrim" id="scrim"></div>
+
+    <div class="app" id="app">
+      <aside class="sidebar" id="sidebar"></aside>
+      <div class="main">
+        <header class="topbar" id="topbar"></header>
+        <main class="content">
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <div class="input-wrap search">
+              <i data-lucide="search"></i>
+              <input type="text" id="search" placeholder="Buscar por título, autor ou ISBN…" />
+            </div>
+            <select id="filter-categoria"><option value="">Todas as categorias</option></select>
+            <select id="sort">
+              <option value="titulo:asc">Título (A→Z)</option>
+              <option value="titulo:desc">Título (Z→A)</option>
+              <option value="autor:asc">Autor (A→Z)</option>
+              <option value="categoria:asc">Categoria</option>
+              <option value="created_at:desc">Mais recentes</option>
+            </select>
+            <div class="grow"></div>
+            <button class="btn btn--primary" id="btn-add">
+              <i data-lucide="plus"></i> Novo livro
+            </button>
+          </div>
+
+          <!-- Tabela -->
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="titulo">Livro <span class="arrow">↕</span></th>
+                  <th class="sortable" data-sort="categoria">Categoria <span class="arrow">↕</span></th>
+                  <th>ISBN</th>
+                  <th>Disponibilidade</th>
+                  <th class="sortable" data-sort="created_at">Cadastro <span class="arrow">↕</span></th>
+                  <th style="text-align:right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+
+          <!-- Paginação -->
+          <div class="pagination">
+            <div class="info" id="page-info"></div>
+            <div class="pager" id="pager"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal: adicionar / editar livro -->
+    <div class="modal-overlay" id="modal-livro">
+      <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal__head">
+          <div class="ico"><i data-lucide="book-plus"></i></div>
+          <div>
+            <h3 id="modal-title">Novo livro</h3>
+            <p>Preencha as informações do exemplar.</p>
+          </div>
+          <button class="icon-btn close" data-close-modal aria-label="Fechar"><i data-lucide="x"></i></button>
+        </div>
+        <form id="form-livro">
+          <div class="modal__body">
+            <input type="hidden" id="livro-id" />
+            <div class="field">
+              <label for="livro-titulo">Título *</label>
+              <input type="text" id="livro-titulo" placeholder="Ex.: Dom Casmurro" />
+              <small class="field-error">Informe o título.</small>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="livro-autor">Autor *</label>
+                <input type="text" id="livro-autor" placeholder="Ex.: Machado de Assis" />
+                <small class="field-error">Informe o autor.</small>
+              </div>
+              <div class="field">
+                <label for="livro-categoria">Categoria</label>
+                <input type="text" id="livro-categoria" list="cat-list" placeholder="Ex.: Romance" />
+                <datalist id="cat-list"></datalist>
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="livro-isbn">ISBN</label>
+                <input type="text" id="livro-isbn" placeholder="978-..." />
+              </div>
+              <div class="field">
+                <label for="livro-qtd">Quantidade *</label>
+                <input type="number" id="livro-qtd" min="0" value="1" />
+                <small class="field-error">Quantidade inválida.</small>
+              </div>
+            </div>
+          </div>
+          <div class="modal__foot">
+            <button type="button" class="btn btn--ghost" data-close-modal>Cancelar</button>
+            <button type="submit" class="btn btn--primary" id="btn-save">
+              <i data-lucide="check"></i> Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script type="module" src="src/js/livros.js"></script>
+  </body>
+</html>

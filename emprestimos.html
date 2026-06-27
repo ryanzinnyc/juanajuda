@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <title>BiblioTech — Empréstimos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles/styles.css" />
+  </head>
+  <body>
+    <div class="loader" id="loader">
+      <div class="loader__inner">
+        <div class="loader__mark"><i data-lucide="library-big"></i></div>
+        <div class="loader__bar"></div>
+        <p>Carregando empréstimos…</p>
+      </div>
+    </div>
+    <div class="scrim" id="scrim"></div>
+
+    <div class="app" id="app">
+      <aside class="sidebar" id="sidebar"></aside>
+      <div class="main">
+        <header class="topbar" id="topbar"></header>
+        <main class="content">
+          <div class="toolbar">
+            <div class="input-wrap search">
+              <i data-lucide="search"></i>
+              <input type="text" id="search" placeholder="Buscar por aluno, livro ou matrícula…" />
+            </div>
+            <select id="filter-status">
+              <option value="">Todos os status</option>
+              <option value="ativo">Ativos</option>
+              <option value="atrasado">Atrasados</option>
+              <option value="devolvido">Devolvidos</option>
+            </select>
+            <div class="grow"></div>
+            <button class="btn btn--primary" id="btn-add"><i data-lucide="book-plus"></i> Novo empréstimo</button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>Aluno</th>
+                  <th>Livro</th>
+                  <th>Empréstimo</th>
+                  <th>Prev. devolução</th>
+                  <th>Devolvido em</th>
+                  <th>Status</th>
+                  <th style="text-align:right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <div class="info" id="page-info"></div>
+            <div class="pager" id="pager"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal novo empréstimo -->
+    <div class="modal-overlay" id="modal-emp">
+      <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal__head">
+          <div class="ico"><i data-lucide="book-plus"></i></div>
+          <div>
+            <h3>Registrar empréstimo</h3>
+            <p>Selecione o aluno, o livro e a data de devolução.</p>
+          </div>
+          <button class="icon-btn close" data-close-modal aria-label="Fechar"><i data-lucide="x"></i></button>
+        </div>
+        <form id="form-emp">
+          <div class="modal__body">
+            <div class="field">
+              <label for="emp-aluno">Aluno *</label>
+              <select id="emp-aluno"><option value="">Selecione o aluno…</option></select>
+              <small class="field-error">Selecione um aluno.</small>
+            </div>
+            <div class="field">
+              <label for="emp-livro">Livro *</label>
+              <select id="emp-livro"><option value="">Selecione o livro…</option></select>
+              <small class="field-error">Selecione um livro disponível.</small>
+            </div>
+            <div class="field">
+              <label for="emp-data">Data prevista de devolução *</label>
+              <input type="date" id="emp-data" />
+              <small class="field-error">Informe uma data válida.</small>
+            </div>
+          </div>
+          <div class="modal__foot">
+            <button type="button" class="btn btn--ghost" data-close-modal>Cancelar</button>
+            <button type="submit" class="btn btn--primary" id="btn-save"><i data-lucide="check"></i> Registrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script type="module" src="src/js/emprestimos.js"></script>
+  </body>
+</html>

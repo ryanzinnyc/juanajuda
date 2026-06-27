@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <title>BiblioTech — Alunos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles/styles.css" />
+  </head>
+  <body>
+    <div class="loader" id="loader">
+      <div class="loader__inner">
+        <div class="loader__mark"><i data-lucide="library-big"></i></div>
+        <div class="loader__bar"></div>
+        <p>Carregando alunos…</p>
+      </div>
+    </div>
+    <div class="scrim" id="scrim"></div>
+
+    <div class="app" id="app">
+      <aside class="sidebar" id="sidebar"></aside>
+      <div class="main">
+        <header class="topbar" id="topbar"></header>
+        <main class="content">
+          <div class="toolbar">
+            <div class="input-wrap search">
+              <i data-lucide="search"></i>
+              <input type="text" id="search" placeholder="Buscar por nome, matrícula ou e-mail…" />
+            </div>
+            <select id="filter-turma"><option value="">Todas as turmas</option></select>
+            <select id="sort">
+              <option value="nome:asc">Nome (A→Z)</option>
+              <option value="nome:desc">Nome (Z→A)</option>
+              <option value="matricula:asc">Matrícula</option>
+              <option value="turma:asc">Turma</option>
+              <option value="created_at:desc">Mais recentes</option>
+            </select>
+            <div class="grow"></div>
+            <button class="btn btn--primary" id="btn-add"><i data-lucide="user-plus"></i> Novo aluno</button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="nome">Aluno <span class="arrow">↕</span></th>
+                  <th class="sortable" data-sort="matricula">Matrícula <span class="arrow">↕</span></th>
+                  <th class="sortable" data-sort="turma">Turma <span class="arrow">↕</span></th>
+                  <th>Telefone</th>
+                  <th class="sortable" data-sort="created_at">Cadastro <span class="arrow">↕</span></th>
+                  <th style="text-align:right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <div class="info" id="page-info"></div>
+            <div class="pager" id="pager"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal aluno -->
+    <div class="modal-overlay" id="modal-aluno">
+      <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal__head">
+          <div class="ico"><i data-lucide="user-round-plus"></i></div>
+          <div>
+            <h3 id="modal-title">Novo aluno</h3>
+            <p>Preencha os dados do aluno.</p>
+          </div>
+          <button class="icon-btn close" data-close-modal aria-label="Fechar"><i data-lucide="x"></i></button>
+        </div>
+        <form id="form-aluno">
+          <div class="modal__body">
+            <input type="hidden" id="aluno-id" />
+            <div class="field">
+              <label for="aluno-nome">Nome completo *</label>
+              <input type="text" id="aluno-nome" placeholder="Ex.: Ana Beatriz Souza" />
+              <small class="field-error">Informe o nome.</small>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="aluno-matricula">Matrícula *</label>
+                <input type="text" id="aluno-matricula" placeholder="Ex.: 2024001" />
+                <small class="field-error">Informe a matrícula.</small>
+              </div>
+              <div class="field">
+                <label for="aluno-turma">Turma</label>
+                <input type="text" id="aluno-turma" list="turma-list" placeholder="Ex.: 9º A" />
+                <datalist id="turma-list"></datalist>
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="aluno-telefone">Telefone</label>
+                <input type="tel" id="aluno-telefone" placeholder="(11) 90000-0000" />
+              </div>
+              <div class="field">
+                <label for="aluno-email">E-mail</label>
+                <input type="email" id="aluno-email" placeholder="aluno@escola.edu.br" />
+                <small class="field-error">E-mail inválido.</small>
+              </div>
+            </div>
+          </div>
+          <div class="modal__foot">
+            <button type="button" class="btn btn--ghost" data-close-modal>Cancelar</button>
+            <button type="submit" class="btn btn--primary" id="btn-save"><i data-lucide="check"></i> Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script type="module" src="src/js/alunos.js"></script>
+  </body>
+</html>

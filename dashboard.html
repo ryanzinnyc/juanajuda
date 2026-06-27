@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <title>BiblioTech — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles/styles.css" />
+  </head>
+  <body>
+    <!-- Loading screen -->
+    <div class="loader" id="loader">
+      <div class="loader__inner">
+        <div class="loader__mark"><i data-lucide="library-big"></i></div>
+        <div class="loader__bar"></div>
+        <p>Carregando painel…</p>
+      </div>
+    </div>
+
+    <div class="scrim" id="scrim"></div>
+
+    <div class="app" id="app">
+      <aside class="sidebar" id="sidebar"></aside>
+      <div class="main">
+        <header class="topbar" id="topbar"></header>
+        <main class="content">
+          <!-- Cards de estatística -->
+          <section class="stats" id="stats">
+            <div class="stat stat--indigo">
+              <div class="stat__icon"><i data-lucide="book-copy"></i></div>
+              <div class="stat__value" data-stat="totalLivros">—</div>
+              <div class="stat__label">Total de Livros</div>
+              <div class="stat__trend" data-trend="titulos"></div>
+            </div>
+            <div class="stat stat--violet">
+              <div class="stat__icon"><i data-lucide="graduation-cap"></i></div>
+              <div class="stat__value" data-stat="totalAlunos">—</div>
+              <div class="stat__label">Total de Alunos</div>
+              <div class="stat__trend">Matriculados na escola</div>
+            </div>
+            <div class="stat stat--amber">
+              <div class="stat__icon"><i data-lucide="book-marked"></i></div>
+              <div class="stat__value" data-stat="emprestimosAtivos">—</div>
+              <div class="stat__label">Empréstimos Ativos</div>
+              <div class="stat__trend" data-trend="atrasos"></div>
+            </div>
+            <div class="stat stat--emerald">
+              <div class="stat__icon"><i data-lucide="circle-check-big"></i></div>
+              <div class="stat__value" data-stat="disponiveis">—</div>
+              <div class="stat__label">Livros Disponíveis</div>
+              <div class="stat__trend up"><i data-lucide="trending-up"></i> Prontos para empréstimo</div>
+            </div>
+          </section>
+
+          <!-- Gráficos -->
+          <section class="grid-2">
+            <div class="card">
+              <div class="card__head">
+                <div>
+                  <h3>Empréstimos por mês</h3>
+                  <p>Movimentação dos últimos 6 meses</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <div class="chart-box"><canvas id="chartMeses"></canvas></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__head">
+                <div>
+                  <h3>Acervo por categoria</h3>
+                  <p>Distribuição dos exemplares</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <div class="chart-box"><canvas id="chartCategorias"></canvas></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Empréstimos recentes -->
+          <section class="card">
+            <div class="card__head">
+              <div>
+                <h3>Empréstimos recentes</h3>
+                <p>Últimas movimentações registradas</p>
+              </div>
+              <div class="topbar__spacer"></div>
+              <a class="btn btn--sm btn--ghost" href="emprestimos.html">
+                Ver todos <i data-lucide="arrow-right"></i>
+              </a>
+            </div>
+            <div class="table-wrap" style="border:none;border-radius:0;background:transparent">
+              <table class="data">
+                <thead>
+                  <tr>
+                    <th>Aluno</th>
+                    <th>Livro</th>
+                    <th>Empréstimo</th>
+                    <th>Devolução prevista</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script type="module" src="src/js/dashboard.js"></script>
+  </body>
+</html>

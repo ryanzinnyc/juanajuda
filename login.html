@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <title>BiblioTech — Acessar</title>
+    <meta name="description" content="Sistema de Gestão de Biblioteca Escolar" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles/styles.css" />
+  </head>
+  <body>
+    <main class="auth">
+      <!-- Painel de marca -->
+      <section class="auth__brandside">
+        <div class="auth__logo">
+          <span class="brand-mark"><i data-lucide="library-big"></i></span>
+          BiblioTech
+        </div>
+
+        <div class="auth__pitch">
+          <h1>A biblioteca da sua escola, <span class="gradient-text">finalmente moderna.</span></h1>
+          <p>
+            Controle de acervo, alunos e empréstimos em uma plataforma rápida, segura e
+            elegante — pensada para instituições de ensino.
+          </p>
+          <div class="auth__features">
+            <div class="auth__feature">
+              <i data-lucide="book-open"></i> Gestão completa do acervo com estoque automático
+            </div>
+            <div class="auth__feature">
+              <i data-lucide="users"></i> Cadastro de alunos por turma e matrícula
+            </div>
+            <div class="auth__feature">
+              <i data-lucide="repeat"></i> Empréstimos, devoluções e controle de atrasos
+            </div>
+            <div class="auth__feature">
+              <i data-lucide="shield-check"></i> Autenticação segura e dados protegidos
+            </div>
+          </div>
+        </div>
+
+        <div class="auth__brandfoot">© 2026 BiblioTech · Sistema de Gestão de Biblioteca Escolar</div>
+      </section>
+
+      <!-- Lado do formulário -->
+      <section class="auth__formside">
+        <div class="auth__card">
+          <!-- ====================== LOGIN ====================== -->
+          <form id="form-login" class="auth-view" novalidate>
+            <h2>Bem-vindo de volta 👋</h2>
+            <p class="sub">Entre com sua conta para acessar o painel.</p>
+
+            <div class="field">
+              <label for="login-email">E-mail</label>
+              <div class="input-wrap">
+                <i data-lucide="mail"></i>
+                <input type="email" id="login-email" autocomplete="username" placeholder="voce@escola.edu.br" />
+              </div>
+              <small class="field-error">Informe um e-mail válido.</small>
+            </div>
+
+            <div class="field">
+              <label for="login-pass">Senha</label>
+              <div class="input-wrap">
+                <i data-lucide="lock"></i>
+                <input type="password" id="login-pass" autocomplete="current-password" placeholder="••••••••" />
+                <button type="button" class="toggle-pass" data-toggle="login-pass" aria-label="Mostrar senha">
+                  <i data-lucide="eye"></i>
+                </button>
+              </div>
+              <small class="field-error">Informe sua senha.</small>
+            </div>
+
+            <div class="form-aux">
+              <label class="checkbox">
+                <input type="checkbox" id="remember" /> Lembrar de mim
+              </label>
+              <a href="#" class="link-muted" data-go="forgot">Esqueceu a senha?</a>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--block btn--lg">
+              <i data-lucide="log-in"></i> Entrar
+            </button>
+
+            <p class="auth__switch">
+              Não tem uma conta? <a href="#" data-go="signup">Criar conta</a>
+            </p>
+
+            <div class="demo-banner hidden" id="demo-banner">
+              <i data-lucide="info"></i>
+              <div>
+                <b>Modo demonstração ativo.</b> Use
+                <b>admin@biblioteca.com</b> / <b>123456</b> ou crie sua própria conta. Os dados
+                ficam salvos neste navegador.
+              </div>
+            </div>
+          </form>
+
+          <!-- ====================== CADASTRO ====================== -->
+          <form id="form-signup" class="auth-view hidden" novalidate>
+            <h2>Criar sua conta</h2>
+            <p class="sub">Comece a gerenciar a biblioteca em segundos.</p>
+
+            <div class="field">
+              <label for="su-nome">Nome completo</label>
+              <div class="input-wrap">
+                <i data-lucide="user"></i>
+                <input type="text" id="su-nome" autocomplete="name" placeholder="Seu nome" />
+              </div>
+              <small class="field-error">Informe seu nome.</small>
+            </div>
+
+            <div class="field">
+              <label for="su-email">E-mail</label>
+              <div class="input-wrap">
+                <i data-lucide="mail"></i>
+                <input type="email" id="su-email" autocomplete="email" placeholder="voce@escola.edu.br" />
+              </div>
+              <small class="field-error">Informe um e-mail válido.</small>
+            </div>
+
+            <div class="field">
+              <label for="su-pass">Senha</label>
+              <div class="input-wrap">
+                <i data-lucide="lock"></i>
+                <input type="password" id="su-pass" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
+                <button type="button" class="toggle-pass" data-toggle="su-pass" aria-label="Mostrar senha">
+                  <i data-lucide="eye"></i>
+                </button>
+              </div>
+              <div class="pwd-meter"><span id="pwd-bar"></span></div>
+              <small class="field-error">A senha deve ter ao menos 6 caracteres.</small>
+            </div>
+
+            <div class="field">
+              <label for="su-pass2">Confirmar senha</label>
+              <div class="input-wrap">
+                <i data-lucide="lock-keyhole"></i>
+                <input type="password" id="su-pass2" autocomplete="new-password" placeholder="Repita a senha" />
+              </div>
+              <small class="field-error">As senhas não coincidem.</small>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--block btn--lg">
+              <i data-lucide="user-plus"></i> Criar conta
+            </button>
+
+            <p class="auth__switch">
+              Já tem uma conta? <a href="#" data-go="login">Entrar</a>
+            </p>
+          </form>
+
+          <!-- ====================== RECUPERAÇÃO ====================== -->
+          <form id="form-forgot" class="auth-view hidden" novalidate>
+            <h2>Recuperar senha</h2>
+            <p class="sub">Enviaremos um link de redefinição para seu e-mail.</p>
+
+            <div class="field">
+              <label for="fg-email">E-mail</label>
+              <div class="input-wrap">
+                <i data-lucide="mail"></i>
+                <input type="email" id="fg-email" autocomplete="email" placeholder="voce@escola.edu.br" />
+              </div>
+              <small class="field-error">Informe um e-mail válido.</small>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--block btn--lg">
+              <i data-lucide="send"></i> Enviar link de recuperação
+            </button>
+
+            <p class="auth__switch">
+              Lembrou a senha? <a href="#" data-go="login">Voltar ao login</a>
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <div class="toasts" id="toasts"></div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script type="module" src="src/js/login.js"></script>
+  </body>
+</html>
