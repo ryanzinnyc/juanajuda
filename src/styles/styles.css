@@ -279,6 +279,9 @@ body::before {
 .auth__switch a:hover {
   text-decoration: underline;
 }
+.mode-switch {
+  margin-top: 12px;
+}
 .demo-banner {
   margin-top: 22px;
   padding: 12px 14px;

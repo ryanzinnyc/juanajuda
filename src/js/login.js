@@ -39,6 +39,30 @@ $$("[data-go]").forEach((a) =>
   })
 );
 
+function applyModeUI() {
+  $("#demo-banner")?.classList.toggle("hidden", !Auth.isDemoMode);
+  $("#use-offline-login")?.classList.toggle(
+    "hidden",
+    Auth.isDemoMode || !Auth.isSupabaseConfigured
+  );
+  $("#use-online-login")?.classList.toggle(
+    "hidden",
+    !Auth.isDemoMode || !Auth.isSupabaseConfigured
+  );
+}
+
+$("#use-offline-login")?.addEventListener("click", () => {
+  Auth.setOfflineMode(true);
+  Toast.success("Modo offline ativado", "Use admin@biblioteca.com / 123456.");
+  setTimeout(() => location.reload(), 350);
+});
+
+$("#use-online-login")?.addEventListener("click", () => {
+  Auth.setOfflineMode(false);
+  Toast.success("Modo Supabase ativado", "Use sua conta cadastrada.");
+  setTimeout(() => location.reload(), 350);
+});
+
 /* --------------------------- mostrar/ocultar ---------------------------- */
 $$(".toggle-pass").forEach((btn) =>
   btn.addEventListener("click", () => {
@@ -157,8 +181,8 @@ $$("input").forEach((i) => i.addEventListener("input", () => clearError(i)));
   icons();
   // já autenticado? vai direto ao painel
   await Auth.redirectIfAuthed();
-  // banner do modo demo + e-mail lembrado
-  if (Auth.isDemoMode) $("#demo-banner").classList.remove("hidden");
+  // modo de login + e-mail lembrado
+  applyModeUI();
   const remembered = localStorage.getItem(REMEMBER_KEY);
   if (remembered) {
     $("#login-email").value = remembered;
