@@ -16,8 +16,8 @@
  * ---------------------------------------------------------------------------
  */
 
-export const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
-export const SUPABASE_ANON_KEY = "SUA-CHAVE-ANON-PUBLIC";
+export const SUPABASE_URL = "https://fznobzfamqbxcgipzdgd.supabase.co";
+export const SUPABASE_ANON_KEY = "sb_publishable_c3dhwBGVbQUadyuvnBarNw_KbzqjoYr";
 
 /** Identidade visual / textos do produto */
 export const APP = {
