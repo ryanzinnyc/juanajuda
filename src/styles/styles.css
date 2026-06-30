@@ -371,8 +371,26 @@ select {
   background-position: right 14px center;
   padding-right: 38px;
 }
+/* Opções da lista suspensa: fundo escuro OPACO + texto claro.
+   Sem isto, o popup nativo (Windows) abre branco e o texto claro some. */
+select option,
+select optgroup {
+  background-color: #0e111b; /* opaco — option não aceita cor translúcida */
+  color: var(--text);
+}
+select option:checked {
+  background-color: #1a1f30;
+  color: #fff;
+}
+select option:disabled {
+  color: var(--text-muted);
+}
+/* tema escuro nativo: texto, ícone e calendário do campo de data legíveis */
+input[type="date"] {
+  color-scheme: dark;
+}
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.7);
+  opacity: 0.75;
   cursor: pointer;
 }
 .toggle-pass {
