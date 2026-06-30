@@ -2,7 +2,7 @@
  * emprestimos.js — registro de empréstimos, devoluções e controle de atrasos.
  */
 import {
-  bootPage, $, $$, escapeHtml, fmtDate, icons, debounce, daysBetween,
+  bootPage, $, $$, escapeHtml, fmtDate, icons, debounce, daysBetween, downloadCsv,
   Toast, openModal, closeModal, confirmDialog, setBtnLoading,
 } from "./app.js";
 import { Emprestimos, Alunos, Livros } from "../services/database.js";
@@ -67,7 +67,8 @@ function renderRows(rows) {
         <div class="row-actions">
           ${
             e.status_atual !== "devolvido"
-              ? `<button class="icon-btn" data-return="${e.id}" title="Registrar devolução" style="color:var(--success)"><i data-lucide="undo-2"></i></button>`
+              ? `<button class="icon-btn" data-renew="${e.id}" title="Renovar (+14 dias)" style="color:var(--info)"><i data-lucide="calendar-plus"></i></button>
+                 <button class="icon-btn" data-return="${e.id}" title="Registrar devolução" style="color:var(--success)"><i data-lucide="undo-2"></i></button>`
               : `<button class="icon-btn" disabled title="Já devolvido"><i data-lucide="check-check"></i></button>`
           }
           <button class="icon-btn danger" data-del="${e.id}" title="Excluir"><i data-lucide="trash-2"></i></button>
@@ -154,6 +155,13 @@ function openForm() {
 
 (async function () {
   await bootPage({ active: "emprestimos.html", title: "Empréstimos", subtitle: "Controle de retiradas e devoluções" });
+
+  // Permite chegar já filtrado via link (ex.: dashboard → ?status=atrasado)
+  const initialStatus = new URLSearchParams(location.search).get("status");
+  if (["ativo", "atrasado", "devolvido"].includes(initialStatus)) {
+    state.status = initialStatus;
+    $("#filter-status").value = initialStatus;
+  }
   await load();
 
   $("#search").addEventListener(
@@ -179,7 +187,25 @@ function openForm() {
 
   $("#tbody").addEventListener("click", async (e) => {
     const ret = e.target.closest("[data-return]");
+    const renew = e.target.closest("[data-renew]");
     const del = e.target.closest("[data-del]");
+    if (renew) {
+      const ok = await confirmDialog({
+        title: "Renovar empréstimo",
+        message: "Estender o prazo de devolução em mais 14 dias?",
+        confirmText: "Renovar",
+        danger: false,
+        icon: "calendar-plus",
+      });
+      if (!ok) return;
+      try {
+        const emp = await Emprestimos.renovar(renew.dataset.renew);
+        Toast.success("Empréstimo renovado", `Novo prazo: ${fmtDate(emp.data_prevista)}.`);
+        load();
+      } catch (err) {
+        Toast.error("Erro ao renovar", err.message);
+      }
+    }
     if (ret) {
       const ok = await confirmDialog({
         title: "Registrar devolução",
@@ -216,6 +242,34 @@ function openForm() {
   });
 
   $("#btn-add").addEventListener("click", openForm);
+
+  // exportar CSV (respeita busca/filtro atuais)
+  $("#btn-export").addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    setBtnLoading(btn, true, "Exportando...");
+    try {
+      const { data } = await Emprestimos.list({ ...state, pageSize: 100000 });
+      if (!data.length) {
+        Toast.info("Nada para exportar", "Nenhum empréstimo corresponde aos filtros atuais.");
+        return;
+      }
+      downloadCsv(`emprestimos-${new Date().toISOString().slice(0, 10)}.csv`, data, [
+        { key: "aluno_nome", label: "Aluno" },
+        { key: "aluno_matricula", label: "Matrícula" },
+        { key: "livro_titulo", label: "Livro" },
+        { key: "livro_autor", label: "Autor" },
+        { label: "Empréstimo", value: (r) => fmtDate(r.data_emprestimo) },
+        { label: "Prev. devolução", value: (r) => fmtDate(r.data_prevista) },
+        { label: "Devolvido em", value: (r) => (r.data_devolucao ? fmtDate(r.data_devolucao) : "") },
+        { key: "status_atual", label: "Status" },
+      ]);
+      Toast.success("Exportação concluída", `${data.length} empréstimo(s) exportado(s).`);
+    } catch (err) {
+      Toast.error("Erro ao exportar", err.message);
+    } finally {
+      setBtnLoading(btn, false);
+    }
+  });
 
   $("#form-emp").addEventListener("submit", async (e) => {
     e.preventDefault();

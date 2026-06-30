@@ -49,6 +49,22 @@ function applyModeUI() {
     "hidden",
     !Auth.isDemoMode || !Auth.isSupabaseConfigured
   );
+
+  // Quando o Supabase estava configurado mas indisponível, deixamos claro o
+  // motivo de termos caído no modo demonstração.
+  if (Auth.didAutoFallback) {
+    const banner = $("#demo-banner");
+    if (banner) {
+      banner.innerHTML = `
+        <i data-lucide="cloud-off"></i>
+        <div>
+          <b>Servidor indisponível — modo demonstração ativado.</b>
+          Não foi possível conectar ao Supabase, então o sistema está rodando
+          com dados locais. Use <b>admin@biblioteca.com</b> / <b>123456</b>.
+        </div>`;
+      icons();
+    }
+  }
 }
 
 $("#use-offline-login")?.addEventListener("click", () => {

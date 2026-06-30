@@ -17,7 +17,7 @@
  *   Auth.updatePassword(newPassword)
  * ---------------------------------------------------------------------------
  */
-import { supabase, isDemoMode, isSupabaseConfigured, setDemoModeOverride } from "./supabase.js";
+import { supabase, isDemoMode, isSupabaseConfigured, setDemoModeOverride, didAutoFallback } from "./supabase.js";
 import { DEMO_ACCOUNT } from "./config.js";
 
 const DEMO_USERS_KEY = "bibliotech_demo_users";
@@ -189,6 +189,7 @@ const impl = isDemoMode ? demoAuth : supaAuth;
 export const Auth = {
   isDemoMode,
   isSupabaseConfigured,
+  didAutoFallback,
   setOfflineMode: (enabled) => setDemoModeOverride(enabled),
 
   signUp: (p) => impl.signUp(p),

@@ -24,8 +24,10 @@ Linear, Vercel e Stripe — tema escuro, glassmorphism e animações suaves.
 
 ### 📊 Dashboard
 - Cards de estatística: Total de Livros, Total de Alunos, Empréstimos Ativos, Livros Disponíveis
+- **Alerta de atrasos** com link direto para os empréstimos atrasados
 - Gráfico de **empréstimos por mês** (últimos 6 meses)
 - Gráfico de **acervo por categoria**
+- Ranking de **livros mais emprestados** e **alunos mais ativos**
 - Relógio em tempo real e data atual
 - Tabela de empréstimos recentes
 
@@ -33,21 +35,32 @@ Linear, Vercel e Stripe — tema escuro, glassmorphism e animações suaves.
 - Adicionar, editar e excluir livros (com confirmação)
 - Busca por título/autor/ISBN, filtro por categoria, ordenação e paginação
 - Barra visual de disponibilidade (estoque)
+- **Exportação para CSV** respeitando os filtros ativos
 
 ### 👨‍🎓 Alunos
 - Adicionar, editar e excluir alunos
 - Busca por nome/matrícula/e-mail e filtro por turma
+- **Exportação para CSV** respeitando os filtros ativos
 
 ### 🔄 Empréstimos
 - Registrar empréstimos e devoluções
+- **Renovar empréstimo** (estende o prazo em +14 dias e regulariza atrasos)
 - **Atualização automática do estoque**
 - Bloqueio de empréstimo sem exemplares disponíveis
 - Destaque de **atrasos** com contagem de dias
-- Histórico completo com filtro por status
+- Histórico completo com filtro por status + **exportação CSV**
+
+### ⚙️ Configurações
+- Visualização do **modo de operação** (Supabase ou Demonstração)
+- Alternância entre modo online e offline
+- **Restaurar dados de demonstração** com um clique
+- Referência de atalhos e informações da aplicação
 
 ### 🎨 Experiência do usuário
 - Toast notifications · Loading screen · Skeleton loading
 - Modais elegantes · Confirmação antes de excluir
+- **Atalhos de teclado** (`/` busca · `N` novo · `Esc` fechar)
+- **Fallback automático** para o modo demonstração se o Supabase estiver fora do ar
 - Sidebar recolhível · Ícones Lucide · Responsividade total
 
 ---
@@ -127,10 +140,11 @@ JUAN AJUDA/
 ├── index.html              # Redireciona p/ login ou dashboard
 ├── login.html              # Login + Cadastro + Recuperação
 ├── reset-password.html     # Redefinição de senha
-├── dashboard.html          # Painel com estatísticas e gráficos
+├── dashboard.html          # Painel com estatísticas, gráficos e rankings
 ├── livros.html             # Gestão do acervo
 ├── alunos.html             # Gestão de alunos
 ├── emprestimos.html        # Gestão de empréstimos
+├── configuracoes.html      # Configurações do sistema
 ├── assets/
 │   └── favicon.svg
 ├── database/
@@ -140,16 +154,17 @@ JUAN AJUDA/
     │   └── styles.css      # Design system (tema escuro, glassmorphism)
     ├── services/
     │   ├── config.js       # Configuração / chaves do Supabase
-    │   ├── supabase.js     # Cliente Supabase
+    │   ├── supabase.js     # Cliente Supabase + health-check / fallback
     │   ├── auth.js         # Autenticação (Supabase + demo)
     │   └── database.js     # Acesso a dados (Supabase + demo)
     └── js/
-        ├── app.js          # Shell, sidebar, toasts, modais, relógio
+        ├── app.js          # Shell, sidebar, toasts, modais, CSV, atalhos
         ├── login.js
         ├── dashboard.js
         ├── livros.js
         ├── alunos.js
-        └── emprestimos.js
+        ├── emprestimos.js
+        └── configuracoes.js
 ```
 
 ---

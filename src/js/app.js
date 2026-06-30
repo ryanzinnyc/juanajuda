@@ -51,6 +51,35 @@ export function debounce(fn, wait = 300) {
   };
 }
 
+/**
+ * Exporta uma lista de objetos para um arquivo CSV (compatível com Excel).
+ * @param {string} filename  nome do arquivo (ex.: "livros.csv")
+ * @param {object[]} rows    registros a exportar
+ * @param {{key?:string,label:string,value?:Function}[]} columns  colunas
+ */
+export function downloadCsv(filename, rows, columns) {
+  const esc = (v) => {
+    const s = v == null ? "" : String(v);
+    return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const head = columns.map((c) => esc(c.label)).join(",");
+  const body = rows
+    .map((r) =>
+      columns.map((c) => esc(typeof c.value === "function" ? c.value(r) : r[c.key])).join(",")
+    )
+    .join("\n");
+  const csv = "﻿" + head + "\n" + body; // BOM para acentuação no Excel
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 /** (re)desenha os ícones Lucide presentes no DOM. */
 export function icons() {
   if (window.lucide) window.lucide.createIcons();
@@ -222,6 +251,8 @@ const NAV = [
   { href: "livros.html", icon: "book-open", label: "Acervo de Livros" },
   { href: "alunos.html", icon: "graduation-cap", label: "Alunos" },
   { href: "emprestimos.html", icon: "book-marked", label: "Empréstimos" },
+  { section: "Sistema" },
+  { href: "configuracoes.html", icon: "settings", label: "Configurações" },
 ];
 
 function renderSidebar(active, user) {
@@ -304,6 +335,32 @@ function wireShell() {
   $("#logout-top")?.addEventListener("click", logout);
 }
 
+/* ============================ Atalhos de teclado ======================== */
+function wireShortcuts() {
+  document.addEventListener("keydown", (e) => {
+    // Não interfere quando o usuário está digitando ou com modal aberto.
+    const tag = (e.target.tagName || "").toLowerCase();
+    const typing = ["input", "select", "textarea"].includes(tag) || e.target.isContentEditable;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if ($(".modal-overlay.open")) return;
+
+    if (e.key === "/" && !typing) {
+      const search = $("#search");
+      if (search) {
+        e.preventDefault();
+        search.focus();
+        search.select?.();
+      }
+    } else if ((e.key === "n" || e.key === "N") && !typing) {
+      const add = $("#btn-add");
+      if (add) {
+        e.preventDefault();
+        add.click();
+      }
+    }
+  });
+}
+
 /**
  * Inicializa uma página interna: protege a rota, monta o shell, liga tudo.
  * Retorna o usuário autenticado (ou interrompe redirecionando ao login).
@@ -317,6 +374,7 @@ export async function bootPage({ active, title, subtitle }) {
   $("#topbar").innerHTML = renderTopbar(title, subtitle);
   icons();
   wireShell();
+  wireShortcuts();
   startClock();
   hideLoader();
   return user;

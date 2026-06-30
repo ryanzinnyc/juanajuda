@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <title>BiblioTech — Configurações</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles/styles.css" />
+  </head>
+  <body>
+    <div class="loader" id="loader">
+      <div class="loader__inner">
+        <div class="loader__mark"><i data-lucide="library-big"></i></div>
+        <div class="loader__bar"></div>
+        <p>Carregando configurações…</p>
+      </div>
+    </div>
+    <div class="scrim" id="scrim"></div>
+
+    <div class="app" id="app">
+      <aside class="sidebar" id="sidebar"></aside>
+      <div class="main">
+        <header class="topbar" id="topbar"></header>
+        <main class="content">
+          <div class="settings-grid">
+            <!-- Modo de operação -->
+            <section class="card">
+              <div class="card__head">
+                <div class="ico" id="mode-ico"><i data-lucide="database"></i></div>
+                <div>
+                  <h3>Modo de operação</h3>
+                  <p>Onde os dados do sistema são armazenados.</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <div class="mode-state">
+                  <span class="badge" id="mode-badge">—</span>
+                  <p id="mode-desc" class="muted" style="margin-top:10px"></p>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn btn--ghost hidden" id="btn-offline">
+                    <i data-lucide="wifi-off"></i> Usar modo demonstração
+                  </button>
+                  <button class="btn btn--primary hidden" id="btn-online">
+                    <i data-lucide="cloud"></i> Conectar ao Supabase
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Dados de demonstração -->
+            <section class="card" id="card-demo">
+              <div class="card__head">
+                <div class="ico"><i data-lucide="refresh-ccw"></i></div>
+                <div>
+                  <h3>Dados de demonstração</h3>
+                  <p>Restaure o acervo, alunos e empréstimos de exemplo.</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <p class="muted">
+                  Útil quando você quer recomeçar do zero. Os dados ficam salvos apenas
+                  neste navegador (localStorage) e não afetam nenhum servidor.
+                </p>
+                <div class="settings-actions">
+                  <button class="btn btn--danger" id="btn-reset">
+                    <i data-lucide="rotate-ccw"></i> Restaurar dados de exemplo
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Atalhos -->
+            <section class="card">
+              <div class="card__head">
+                <div class="ico"><i data-lucide="keyboard"></i></div>
+                <div>
+                  <h3>Atalhos de teclado</h3>
+                  <p>Trabalhe mais rápido sem o mouse.</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <ul class="kbd-list">
+                  <li><kbd>/</kbd> <span>Focar a barra de busca</span></li>
+                  <li><kbd>N</kbd> <span>Novo registro na página atual</span></li>
+                  <li><kbd>Esc</kbd> <span>Fechar janela / modal aberto</span></li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- Sobre -->
+            <section class="card">
+              <div class="card__head">
+                <div class="ico"><i data-lucide="info"></i></div>
+                <div>
+                  <h3>Sobre o sistema</h3>
+                  <p>Informações da aplicação.</p>
+                </div>
+              </div>
+              <div class="card__body">
+                <ul class="about-list">
+                  <li><span>Aplicação</span><b id="about-name">BiblioTech</b></li>
+                  <li><span>Versão</span><b id="about-version">—</b></li>
+                  <li><span>Tecnologias</span><b>HTML5 · CSS3 · JavaScript ES6+</b></li>
+                  <li><span>Backend</span><b>Supabase (PostgreSQL + Auth)</b></li>
+                </ul>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script type="module" src="src/js/configuracoes.js"></script>
+  </body>
+</html>

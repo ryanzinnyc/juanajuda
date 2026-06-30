@@ -127,6 +127,15 @@ function seedDemo() {
 }
 if (isDemoMode) seedDemo();
 
+/**
+ * Restaura os dados de demonstração ao estado original (livros, alunos e
+ * empréstimos de exemplo). Usado na página de Configurações.
+ */
+export function resetDemoData() {
+  [K.livros, K.alunos, K.emprestimos, K.seeded].forEach((k) => localStorage.removeItem(k));
+  seedDemo();
+}
+
 /* ====================== filtragem / paginação demo ======================= */
 function paginate(arr, page, pageSize) {
   const total = arr.length;
@@ -480,6 +489,46 @@ export const Emprestimos = {
     return data;
   },
 
+  /**
+   * Renova um empréstimo em aberto, estendendo a data prevista de devolução.
+   * A nova data parte da maior entre "hoje" e a data prevista atual + `dias`,
+   * de modo que renovar um item atrasado também o regulariza.
+   */
+  async renovar(id, dias = 14) {
+    const addDays = (base, n) => {
+      const d = new Date(base + "T00:00:00");
+      d.setDate(d.getDate() + n);
+      return isoDate(d);
+    };
+    if (isDemoMode) {
+      const rows = get(K.emprestimos);
+      const i = rows.findIndex((r) => r.id === id);
+      if (i === -1) throw new Error("Empréstimo não encontrado.");
+      if (rows[i].data_devolucao) throw new Error("Este empréstimo já foi devolvido.");
+      const base = rows[i].data_prevista > today() ? rows[i].data_prevista : today();
+      rows[i].data_prevista = addDays(base, dias);
+      rows[i].status = "ativo";
+      set(K.emprestimos, rows);
+      return rows[i];
+    }
+    const { data: atual, error: e1 } = await supabase
+      .from("emprestimos")
+      .select("data_prevista,data_devolucao")
+      .eq("id", id)
+      .single();
+    if (e1) throw e1;
+    if (atual.data_devolucao) throw new Error("Este empréstimo já foi devolvido.");
+    const base = atual.data_prevista > today() ? atual.data_prevista : today();
+    const { data, error } = await supabase
+      .from("emprestimos")
+      .update({ data_prevista: addDays(base, dias), status: "ativo" })
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  },
+
   async remove(id) {
     if (isDemoMode) {
       const rows = get(K.emprestimos);
@@ -512,9 +561,11 @@ export const Dashboard = {
       emprestimos = get(K.emprestimos);
     } else {
       const [rl, ra, re] = await Promise.all([
-        supabase.from("livros").select("id,categoria,quantidade,disponivel,created_at"),
-        supabase.from("alunos").select("id"),
-        supabase.from("emprestimos").select("data_emprestimo,data_prevista,data_devolucao,status,created_at"),
+        supabase.from("livros").select("id,titulo,categoria,quantidade,disponivel,created_at"),
+        supabase.from("alunos").select("id,nome"),
+        supabase
+          .from("emprestimos")
+          .select("aluno_id,livro_id,data_emprestimo,data_prevista,data_devolucao,status,created_at"),
       ]);
       if (rl.error) throw rl.error;
       if (ra.error) throw ra.error;
@@ -556,6 +607,21 @@ export const Dashboard = {
       porCategoria[c] = (porCategoria[c] || 0) + (l.quantidade || 0);
     });
 
+    // Rankings: livros mais emprestados e alunos mais ativos (todo o histórico)
+    const tituloDe = new Map(livros.map((l) => [l.id, l.titulo]));
+    const nomeDe = new Map(alunos.map((a) => [a.id, a.nome]));
+    const porLivro = {};
+    const porAluno = {};
+    emprestimos.forEach((e) => {
+      if (e.livro_id) porLivro[e.livro_id] = (porLivro[e.livro_id] || 0) + 1;
+      if (e.aluno_id) porAluno[e.aluno_id] = (porAluno[e.aluno_id] || 0) + 1;
+    });
+    const ranking = (obj, nomes) =>
+      Object.entries(obj)
+        .map(([id, total]) => ({ nome: nomes.get(id) || "—", total }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 5);
+
     return {
       cards: {
         totalLivros: totalExemplares,
@@ -570,6 +636,8 @@ export const Dashboard = {
         labels: Object.keys(porCategoria),
         valores: Object.values(porCategoria),
       },
+      topLivros: ranking(porLivro, tituloDe),
+      topAlunos: ranking(porAluno, nomeDe),
     };
   },
 

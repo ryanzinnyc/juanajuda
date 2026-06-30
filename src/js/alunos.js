@@ -2,7 +2,7 @@
  * alunos.js — CRUD de alunos com busca, filtro por turma, ordenação e paginação.
  */
 import {
-  bootPage, $, $$, escapeHtml, fmtDate, icons, debounce, initials,
+  bootPage, $, $$, escapeHtml, fmtDate, icons, debounce, initials, downloadCsv,
   Toast, openModal, closeModal, confirmDialog, setBtnLoading,
 } from "./app.js";
 import { Alunos } from "../services/database.js";
@@ -203,6 +203,32 @@ async function openEdit(id) {
     }
   });
   $("#btn-add").addEventListener("click", () => openForm());
+
+  // exportar CSV (respeita busca/filtro/ordenação atuais)
+  $("#btn-export").addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    setBtnLoading(btn, true, "Exportando...");
+    try {
+      const { data } = await Alunos.list({ ...state, pageSize: 100000 });
+      if (!data.length) {
+        Toast.info("Nada para exportar", "Nenhum aluno corresponde aos filtros atuais.");
+        return;
+      }
+      downloadCsv(`alunos-${new Date().toISOString().slice(0, 10)}.csv`, data, [
+        { key: "nome", label: "Nome" },
+        { key: "matricula", label: "Matrícula" },
+        { key: "turma", label: "Turma" },
+        { key: "telefone", label: "Telefone" },
+        { key: "email", label: "E-mail" },
+        { label: "Cadastro", value: (a) => fmtDate(a.created_at) },
+      ]);
+      Toast.success("Exportação concluída", `${data.length} aluno(s) exportado(s).`);
+    } catch (err) {
+      Toast.error("Erro ao exportar", err.message);
+    } finally {
+      setBtnLoading(btn, false);
+    }
+  });
 
   $("#form-aluno").addEventListener("submit", async (e) => {
     e.preventDefault();

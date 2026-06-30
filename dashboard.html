@@ -30,6 +30,9 @@
       <div class="main">
         <header class="topbar" id="topbar"></header>
         <main class="content">
+          <!-- Alerta de atrasos (preenchido dinamicamente) -->
+          <div id="overdue-alert"></div>
+
           <!-- Cards de estatística -->
           <section class="stats" id="stats">
             <div class="stat stat--indigo">
@@ -80,6 +83,36 @@
               </div>
               <div class="card__body">
                 <div class="chart-box"><canvas id="chartCategorias"></canvas></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Rankings -->
+          <section class="grid-2 grid-2--even">
+            <div class="card">
+              <div class="card__head">
+                <div>
+                  <h3>Livros mais emprestados</h3>
+                  <p>Top 5 títulos do acervo</p>
+                </div>
+                <div class="topbar__spacer"></div>
+                <span class="rank-badge"><i data-lucide="trophy"></i></span>
+              </div>
+              <div class="card__body">
+                <ol class="ranking" id="rank-livros"></ol>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__head">
+                <div>
+                  <h3>Alunos mais ativos</h3>
+                  <p>Top 5 leitores</p>
+                </div>
+                <div class="topbar__spacer"></div>
+                <span class="rank-badge"><i data-lucide="flame"></i></span>
+              </div>
+              <div class="card__body">
+                <ol class="ranking" id="rank-alunos"></ol>
               </div>
             </div>
           </section>

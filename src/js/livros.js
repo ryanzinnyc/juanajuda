@@ -2,7 +2,7 @@
  * livros.js — CRUD de livros com busca, filtro, ordenação e paginação.
  */
 import {
-  bootPage, $, $$, escapeHtml, fmtDate, icons, debounce,
+  bootPage, $, $$, escapeHtml, fmtDate, icons, debounce, downloadCsv,
   Toast, openModal, closeModal, confirmDialog, setBtnLoading,
 } from "./app.js";
 import { Livros } from "../services/database.js";
@@ -224,6 +224,33 @@ async function openEdit(id) {
   });
   // novo
   $("#btn-add").addEventListener("click", () => openForm());
+
+  // exportar CSV (respeita busca/filtro/ordenação atuais)
+  $("#btn-export").addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    setBtnLoading(btn, true, "Exportando...");
+    try {
+      const { data } = await Livros.list({ ...state, pageSize: 100000 });
+      if (!data.length) {
+        Toast.info("Nada para exportar", "Nenhum livro corresponde aos filtros atuais.");
+        return;
+      }
+      downloadCsv(`livros-${new Date().toISOString().slice(0, 10)}.csv`, data, [
+        { key: "titulo", label: "Título" },
+        { key: "autor", label: "Autor" },
+        { key: "categoria", label: "Categoria" },
+        { key: "isbn", label: "ISBN" },
+        { key: "quantidade", label: "Quantidade" },
+        { key: "disponivel", label: "Disponível" },
+        { label: "Cadastro", value: (l) => fmtDate(l.created_at) },
+      ]);
+      Toast.success("Exportação concluída", `${data.length} livro(s) exportado(s).`);
+    } catch (err) {
+      Toast.error("Erro ao exportar", err.message);
+    } finally {
+      setBtnLoading(btn, false);
+    }
+  });
 
   // salvar
   $("#form-livro").addEventListener("submit", async (e) => {

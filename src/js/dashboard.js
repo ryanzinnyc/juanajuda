@@ -19,6 +19,29 @@ function countUp(el, target, duration = 900) {
   requestAnimationFrame(step);
 }
 
+/* ---- lista de ranking (top livros / top alunos) ---- */
+function renderRanking(el, items, emptyIcon = "inbox") {
+  if (!el) return;
+  if (!items || !items.length) {
+    el.innerHTML = `<li class="ranking__empty"><i data-lucide="${emptyIcon}"></i> Sem dados suficientes ainda.</li>`;
+    return;
+  }
+  const max = items[0].total || 1;
+  el.innerHTML = items
+    .map(
+      (it, i) => `
+      <li class="ranking__item">
+        <span class="ranking__pos ranking__pos--${i + 1}">${i + 1}</span>
+        <div class="ranking__main">
+          <span class="ranking__name">${escapeHtml(it.nome)}</span>
+          <div class="ranking__track"><span style="width:${Math.round((it.total / max) * 100)}%"></span></div>
+        </div>
+        <span class="ranking__count">${it.total}</span>
+      </li>`
+    )
+    .join("");
+}
+
 /* ---- tema padrão dos gráficos ---- */
 function chartTheme() {
   Chart.defaults.color = "#99a0b3";
@@ -122,6 +145,25 @@ function doughnutChart(ctx, labels, data) {
       trendAtraso.classList.add("up");
       trendAtraso.innerHTML = `<i data-lucide="check"></i> Nenhum atraso`;
     }
+    icons();
+
+    // alerta de atrasos
+    const alertBox = $("#overdue-alert");
+    if (atr > 0 && alertBox) {
+      alertBox.innerHTML = `
+        <a class="alert-overdue" href="emprestimos.html?status=atrasado">
+          <span class="alert-overdue__ico"><i data-lucide="alert-triangle"></i></span>
+          <div class="alert-overdue__txt">
+            <b>${atr} empréstimo(s) em atraso</b>
+            <span>Há livros que passaram da data prevista de devolução.</span>
+          </div>
+          <span class="alert-overdue__cta">Ver atrasados <i data-lucide="arrow-right"></i></span>
+        </a>`;
+    }
+
+    // rankings
+    renderRanking($("#rank-livros"), d.topLivros, "book-x");
+    renderRanking($("#rank-alunos"), d.topAlunos, "user-x");
     icons();
 
     // gráficos
